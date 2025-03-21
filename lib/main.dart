@@ -389,9 +389,89 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
                       const SizedBox(height: 24),
 
                       // Placeholder for image display (will be implemented in Step 4-B)
+                      // main.dart
+// Note: This is a continuation from Step 4-A, focusing on the image display section
+// The previous code remains the same until the image display section
+
+// To complete the implementation, replace the placeholder for image display in Step 4-A
+// with this enhanced image display code:
+
+// Image Display with Animation
                       if (_imageUrl != null)
-                        const Text("Image will be displayed here",
-                            style: TextStyle(color: Colors.white)),
+                        FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            color: const Color(0xFF252A34),
+                            elevation: 16,
+                            shadowColor:
+                                const Color(0xFF6C63FF).withOpacity(0.5),
+                            child: Column(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.vertical(
+                                      top: Radius.circular(20)),
+                                  child: Image.network(
+                                    _imageUrl!,
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return SizedBox(
+                                        height: 300,
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                                : null,
+                                            color: const Color(0xFF6C63FF),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        height: 300,
+                                        color: Colors.black.withOpacity(0.1),
+                                        child: const Center(
+                                          child: Text('Error loading image'),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green.shade400,
+                                        size: 16,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      const Text(
+                                        "Image Created Successfully",
+                                        style: TextStyle(
+                                          color: Colors.white70,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 30),
                     ],
                   ),
                 ),
