@@ -71,8 +71,7 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
     with SingleTickerProviderStateMixin {
   final TextEditingController _promptController = TextEditingController();
   // API key is hardcoded and hidden from users
-  final String _apiKey =
-      'YOUR_OPENAI_API_KEY_HERE'; // Replace with your actual API key
+  final String _apiKey = ''; // Replace with your actual API key
   String? _imageUrl;
   bool _isLoading = false;
   String _errorMessage = '';
