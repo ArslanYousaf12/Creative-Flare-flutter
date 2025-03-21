@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color(0xFF6C63FF),
         scaffoldBackgroundColor: const Color(0xFF1A1A2E),
+        // Add Google Fonts integration
         textTheme: GoogleFonts.poppinsTextTheme(
           Theme.of(context).textTheme,
         ),
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
           surface: const Color(0xFF252A34),
           background: const Color(0xFF1A1A2E),
         ),
+        // Enhanced button styling
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF6C63FF),
@@ -41,6 +43,7 @@ class MyApp extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
           ),
         ),
+        // Enhanced input field styling
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: const Color(0xFF252A34),
@@ -70,18 +73,20 @@ class ImageGeneratorScreen extends StatefulWidget {
 class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
     with SingleTickerProviderStateMixin {
   final TextEditingController _promptController = TextEditingController();
-  // API key is hardcoded and hidden from users
-  final String _apiKey = ''; // Replace with your actual API key
+  final String _apiKey = 'YOUR_API_KEY_HERE';
   String? _imageUrl;
   bool _isLoading = false;
   String _errorMessage = '';
   String _modelVersion = 'dall-e-3'; // Default to DALL-E 3
+
+  // Setup animation controllers
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
+    // Initialize animation controller for fade effects
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -114,7 +119,7 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
         body: jsonEncode({
           'prompt': _promptController.text,
           'n': 1,
-          'size': '1024x1024', // Standard size for DALL-E 3
+          'size': '1024x1024',
           'model': _modelVersion,
         }),
       );
@@ -125,6 +130,7 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
           _imageUrl = data['data'][0]['url'];
           _isLoading = false;
         });
+        // Reset and start the animation when image loads
         _animationController.reset();
         _animationController.forward();
       } else {
@@ -153,8 +159,10 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Remove standard AppBar for SliverAppBar
       body: SafeArea(
         child: Container(
+          // Enhanced background with gradient
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -167,6 +175,7 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
           ),
           child: CustomScrollView(
             slivers: [
+              // Flexible AppBar with custom styling
               SliverAppBar(
                 expandedHeight: 120,
                 pinned: true,
@@ -202,13 +211,15 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
                   centerTitle: true,
                 ),
               ),
+
+              // Main content area
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 30),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Inspiration text
+                      // Animated text heading
                       Center(
                         child: AnimatedTextKit(
                           animatedTexts: [
@@ -227,7 +238,7 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
                       ),
                       const SizedBox(height: 25),
 
-                      // Model Selection Card
+                      // Model Selection Card (Same as before)
                       Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -281,7 +292,7 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
                       ),
                       const SizedBox(height: 20),
 
-                      // Prompt Input Card
+                      // Prompt Input Card (Same as before)
                       Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -327,7 +338,7 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
                       ),
                       const SizedBox(height: 24),
 
-                      // Generate Button
+                      // Generate Button with loading state
                       SizedBox(
                         height: 56,
                         child: ElevatedButton.icon(
@@ -351,7 +362,7 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
                       ),
                       const SizedBox(height: 16),
 
-                      // Error Message
+                      // Error Message display
                       if (_errorMessage.isNotEmpty)
                         Container(
                           padding: const EdgeInsets.all(12),
@@ -377,82 +388,10 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
                         ),
                       const SizedBox(height: 24),
 
-                      // Image Display
+                      // Placeholder for image display (will be implemented in Step 4-B)
                       if (_imageUrl != null)
-                        FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            color: const Color(0xFF252A34),
-                            elevation: 16,
-                            shadowColor:
-                                const Color(0xFF6C63FF).withOpacity(0.5),
-                            child: Column(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.vertical(
-                                      top: Radius.circular(20)),
-                                  child: Image.network(
-                                    _imageUrl!,
-                                    loadingBuilder:
-                                        (context, child, loadingProgress) {
-                                      if (loadingProgress == null) return child;
-                                      return SizedBox(
-                                        height: 300,
-                                        child: Center(
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                                : null,
-                                            color: const Color(0xFF6C63FF),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        height: 300,
-                                        color: Colors.black.withOpacity(0.1),
-                                        child: const Center(
-                                          child: Text('Error loading image'),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.check_circle,
-                                        color: Colors.green.shade400,
-                                        size: 16,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      const Text(
-                                        "Image Created Successfully",
-                                        style: TextStyle(
-                                          color: Colors.white70,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      const SizedBox(height: 30),
+                        const Text("Image will be displayed here",
+                            style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
