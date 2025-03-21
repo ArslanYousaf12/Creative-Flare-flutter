@@ -264,10 +264,15 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen>
                                 items: const [
                                   DropdownMenuItem(
                                       value: 'dall-e-3',
-                                      child: Text('DALL-E 3 (Best Quality)')),
+                                      child: Text(
+                                        'DALL-E 3 (Best Quality)',
+                                        style: TextStyle(color: Colors.white),
+                                      )),
                                   DropdownMenuItem(
                                       value: 'dall-e-2',
-                                      child: Text('DALL-E 2 (Faster)')),
+                                      child: Text('DALL-E 2 (Faster)',
+                                          style:
+                                              TextStyle(color: Colors.white))),
                                 ],
                                 onChanged: (value) {
                                   setState(() {
